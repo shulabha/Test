@@ -1,0 +1,43 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the block module.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+ function review_schema() {
+   $schema['hcp_review'] = array(
+    'description' => 'The base table for review block.',
+    'fields' => array(
+      'id' => array(
+        'description' => 'The primary identifier for a node.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE),
+      'uid' => array(
+        'description' => 'Unique id',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0),
+      'experience' => array(
+        'description' => 'User experience',
+        'type' => 'varchar',
+        'length' => 32,
+        'not null' => TRUE,
+        'default' => ''),
+      'comment' => array(
+        'description' => 'Any comment regarding the site',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => ''),
+      ),
+    'primary key' => array('uid'),
+    );
+	return $schema;
+ }
+?>

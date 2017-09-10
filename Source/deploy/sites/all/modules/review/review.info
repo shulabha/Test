@@ -1,0 +1,4 @@
+<?php
+name = review
+description = site review
+core = 7.x

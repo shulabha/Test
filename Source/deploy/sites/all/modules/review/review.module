@@ -1,0 +1,112 @@
+<?php
+
+/**
+ * Implements hook_block_info().
+ */
+function review_block_info() {
+  $blocks = array();
+  $blocks['review_select_form'] =  array(
+    'info' => t('My site review'),
+    'page callback' => 'my_site_review',
+    'access argument' => array('access content'),
+    );
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_configure().
+ */
+function review_block_configure($delta='') {
+  $form = array();
+  
+  switch($delta) {
+    case 'review_select_form' :
+      // Text field form element
+      $form['text_body'] = array(
+        '#type' => 'radios',
+        '#title' => t('Share your experience'),
+        '#description' => t('Select an option'),
+        '#options' => array(
+         t('Good'),
+         t('Average'),
+         t('Bad'),
+         )
+       );
+       break;
+         switch('#option') {
+          case 'Good' :
+           $form['text_body'] = array(
+             '#type' => 'checkboxes',
+             '#title' => t('Reason'),
+             '#description' => t('Select an option'),
+             '#options' => array(
+             t('Content'),
+             t('Performance'),
+             t('UI'),
+             )
+           );
+          break;
+
+	      case 'Average' :
+	      case 'Bad' :
+	       $form['text_body'] = array(
+             '#type' => 'checkboxes',
+             '#title' => t('Reason'),
+             '#description' => t('Select an option'),
+             '#options' => array(
+             t('Content'),
+             t('Performance'),
+             t('UI'),
+             )
+           );
+          break;
+         }
+  }
+  return $form;
+}
+
+/**
+ * Implements hook_block_save().
+ */
+function review_block_save($delta = '', $edit = array()) {
+  switch($delta) {
+    case 'review_select_form' :
+      // Saving the customer review      
+      variable_set('text_variable', $edit['text_body']['value']);
+      break;
+  }
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function review_block_view($delta='') {
+  $block = array();
+  
+  switch($delta) {
+    case 'review_select_form' :
+
+      $block['content'] = my_block_view();
+      break;
+  }
+  
+  return $block;
+}
+
+/**
+ * Custom function to assemble renderable array for block content.
+ * Returns a renderable array with the block content.
+ * @return
+ *   returns a renderable array of block content.
+ */
+function my_block_view() {
+  $block = array();
+
+  // Capture review text from the variable
+  $text = variable_get('text_variable', '');
+
+  // Block output in HTML with div wrapper
+  $block = array(
+      '#prefix' => (''),
+      );
+ }
