@@ -14,42 +14,74 @@ function review_block_info() {
 }
 
 /**
- * Implements hook_block_configure().
+ * Implements hook_block_view().
  */
-function review_block_configure($delta='') {
-  $form = array();
+function review_block_view($delta = '') {
+  // This example is adapted from node.module.
+  $block = array();
   
-  switch($delta) {
-    case 'review_select_form' :
-      // Text field form element
-      $form['text_body'] = array(
-        '#type' => 'radios',
-        '#title' => t('Share your experience'),
-        '#description' => t('Select an option'),
-        '#options' => array(
+
+  switch ($delta) {
+    case 'review_select_form':
+      $block['subject'] = t('Review');
+      $block['content'] = drupal_get_form('MYREVIEW_form');
+    break;
+  }
+  return $block;
+}
+
+/**
+ * Custom form.
+ */
+function MYREVIEW_form($form, &$form_state) {
+  $form['experience'] = array(
+    '#type' => 'radios',
+    '#title' => t('Share your experience'),
+    '#options' => array(
          t('Good'),
          t('Average'),
          t('Bad'),
          )
-       );
-       break;
-         switch('#option') {
-          case 'Good' :
-           $form['text_body'] = array(
+         );
+  $form['reason'] = array(
+    '#type' => 'checkboxes',
+    '#title' => t('Reason'),
+    '#options' => array(
+           t('Content'),
+           t('Performance'),
+           t('UI'),
+            ),
+    '#states' => array(
+            'visible' => array(
+            ':input[name="experience"]' => array(
+              array('value' => 2),
+              array('value' => 3),
+              ),
+            //':input[name="experience"]' => array('value' => 3),
+            ),
+            ),
+            );
+   $form['comments'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Comments'),
+    '#title' => 'Please write any comments',
+    '#size' => 50,
+    '#maxlength' => 50,
+    '#required' => TRUE,
+    );
+   /*switch ('#options') {
+    case 'Good':
              '#type' => 'checkboxes',
              '#title' => t('Reason'),
-             '#description' => t('Select an option'),
              '#options' => array(
              t('Content'),
              t('Performance'),
              t('UI'),
-             )
-           );
+             );
           break;
 
-	      case 'Average' :
-	      case 'Bad' :
-	       $form['text_body'] = array(
+        case 'Average' :
+        case 'Bad' :
              '#type' => 'checkboxes',
              '#title' => t('Reason'),
              '#description' => t('Select an option'),
@@ -61,52 +93,21 @@ function review_block_configure($delta='') {
            );
           break;
          }
-  }
+        //);
+  }*/
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Submit Button'),
+  );
+
   return $form;
 }
 
 /**
- * Implements hook_block_save().
+ * Custom form submit function.
  */
-function review_block_save($delta = '', $edit = array()) {
-  switch($delta) {
-    case 'review_select_form' :
-      // Saving the customer review      
-      variable_set('text_variable', $edit['text_body']['value']);
-      break;
-  }
+function MYFORM_form_submit($form, &$form_state) {
+  // You need the have Devel module enabled for dpm() to work.
+  print_r($form_state);
 }
-
-/**
- * Implements hook_block_view().
- */
-function review_block_view($delta='') {
-  $block = array();
-  
-  switch($delta) {
-    case 'review_select_form' :
-
-      $block['content'] = my_block_view();
-      break;
-  }
-  
-  return $block;
-}
-
-/**
- * Custom function to assemble renderable array for block content.
- * Returns a renderable array with the block content.
- * @return
- *   returns a renderable array of block content.
- */
-function my_block_view() {
-  $block = array();
-
-  // Capture review text from the variable
-  $text = variable_get('text_variable', '');
-
-  // Block output in HTML with div wrapper
-  $block = array(
-      '#prefix' => (''),
-      );
- }

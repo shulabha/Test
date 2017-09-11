@@ -1,7 +1,7 @@
 //Popup with form
 
 $(document).ready(function() {
-	$('.my_site_review').magnificPopup({
+	$('.form-item form-type-radios form-item-text-body').magnificPopup({
 		type: 'block',
 		preloader: false,
 		focus: '#name',
