@@ -1,4 +1,32 @@
 <?php
+/**
+ * Implements hook_menu().
+ */
+function review_menu() {
+  $items['admin/config/development/review'] = array(
+    'title' => 'Site Review Configuration',
+    'description' => 'Configuration options for Site Review content.',
+    'type' => MENU_NORMAL_ITEM,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('review_configuration_form'),
+    'access arguments' => array('administer hcp review configuration'),
+    'file' => 'review_admin.inc',
+  );
+
+  $items['admin/config/development/review/setup'] = array(
+    'title' => 'Site Review Configuration',
+    'description' => 'Configuration options for Site Review content.',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('review_configuration_form'),
+    'access arguments' => array('administer hcp review configuration'),
+    'file' => 'review_admin.inc',
+  );
+  
+  return $items;
+}
+
+
 
 /**
  * Implements hook_block_info().
@@ -24,7 +52,7 @@ function review_block_view($delta = '') {
   switch ($delta) {
     case 'review_select_form':
       $block['subject'] = t('Review');
-      $block['content'] = drupal_get_form('MYREVIEW_form');
+      $block['content'] = drupal_get_form('review_form');
     break;
   }
   return $block;
@@ -33,30 +61,27 @@ function review_block_view($delta = '') {
 /**
  * Custom form.
  */
-function MYREVIEW_form($form, &$form_state) {
+function review_form($form, &$form_state) {
   $form['experience'] = array(
     '#type' => 'radios',
     '#title' => t('Share your experience'),
     '#options' => array(
-         t('Good'),
-         t('Average'),
-         t('Bad'),
-         )
+         'Good'=>'Good',
+         'Average'=>'Average',
+         'Bad'=>'Bad'),
          );
+         
   $form['reason'] = array(
     '#type' => 'checkboxes',
     '#title' => t('Reason'),
     '#options' => array(
-           t('Content'),
-           t('Performance'),
-           t('UI'),
+           'Content' =>'Content',
+           'Performance' => 'Performance',
+           'UI'=>'UI',
             ),
     '#states' => array(
             'visible' => array(
-            ':input[name="experience"]' => array(
-              array('value' => 2),
-              array('value' => 3),
-              ),
+            ':input[name="experience"]' => array('value' => 'Bad'),
             //':input[name="experience"]' => array('value' => 3),
             ),
             ),
@@ -64,37 +89,12 @@ function MYREVIEW_form($form, &$form_state) {
    $form['comments'] = array(
     '#type' => 'textfield',
     '#title' => t('Comments'),
-    '#title' => 'Please write any comments',
+    '#description' => 'Please write any comments',
     '#size' => 50,
     '#maxlength' => 50,
     '#required' => TRUE,
     );
-   /*switch ('#options') {
-    case 'Good':
-             '#type' => 'checkboxes',
-             '#title' => t('Reason'),
-             '#options' => array(
-             t('Content'),
-             t('Performance'),
-             t('UI'),
-             );
-          break;
-
-        case 'Average' :
-        case 'Bad' :
-             '#type' => 'checkboxes',
-             '#title' => t('Reason'),
-             '#description' => t('Select an option'),
-             '#options' => array(
-             t('Content'),
-             t('Performance'),
-             t('UI'),
-             )
-           );
-          break;
-         }
-        //);
-  }*/
+  
 
   $form['submit'] = array(
     '#type' => 'submit',
@@ -107,7 +107,70 @@ function MYREVIEW_form($form, &$form_state) {
 /**
  * Custom form submit function.
  */
-function MYFORM_form_submit($form, &$form_state) {
+function review_form_submit($form, &$form_state) {
   // You need the have Devel module enabled for dpm() to work.
+ // dsm($form_state);
+ echo "<strong>User experience:</strong> ". $form_state[values][experience].'<br><br>';
+ 
+ if($form_state[values][experience] == 'Bad'){
+ echo "<strong>REASON:</strong> ";
+ foreach($form_state[values][reason] as $k=>$v){
+ if ($v != '0'){
+  echo $v.'<br>';
+ }
+} 
+}
+
+ echo "<strong>Comment submitted by User:</strong> ". $form_state[values][comments].'<br>';
+ 
+echo '<br><br><br>';
+  echo '<pre>';
   print_r($form_state);
+  echo '</pre>';
+  die;
+   
+  
+  
+}
+
+ /**
+ *Magnific Popup core JS file
+ */
+//drupal_add_js(drupal_get_path('module', 'review') . '/review.js');
+
+/**
+ * Submit handler for News configuration.
+ *
+ *
+ * @ingroup form.
+ */
+function review_configuration_form_submit($form, &$form_state) {
+  form_state_values_clean($form_state);
+  $values = $form_state['values'];
+
+  /*foreach ($values as $variable_name => $value) {
+    // If the variable is an image then we need to convert to use uuid.
+    if (in_array($variable_name, $images)) {
+      if ($file_object = file_load($value)) {
+        if (property_exists($file_object, 'uuid')) {
+          $value = $file_object->uuid;
+        }
+      }
+    }*/
+
+    //variable_set($variable_name, $value);
+
+  drupal_set_message(t('The configuration has been successfully saved.'));
+}
+
+/**
+ * Implements hook_permission().
+ */
+function review_permission() {
+  return array(
+    'administer hcp review configuration' => array(
+      'title' => t('Administer HCP: review integration'),
+      'description' => t('Perform administration tasks within the review administrative functionality.'),
+    ),
+  );
 }
