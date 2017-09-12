@@ -107,9 +107,8 @@ function review_form($form, &$form_state) {
 /**
  * Custom form submit function.
  */
-function review_form_submit($form, &$form_state) {
-  // You need the have Devel module enabled for dpm() to work.
- // dsm($form_state);
+/*function review_form_submit($form, &$form_state) {
+
  echo "<strong>User experience:</strong> ". $form_state[values][experience].'<br><br>';
  
  if($form_state[values][experience] == 'Bad'){
@@ -131,15 +130,33 @@ echo '<br><br><br>';
    
   
   
+}*/
+
+/**
+ * Implements security_settings_form_submit().
+ */
+function review_form_submit($form, $form_state) {
+  global $user; 
+  // Here u can insert Your custom form values into your custom table.
+  db_insert('hcp_review')
+    ->fields(array(
+      'id' => 1,
+      'uid' => $user->uid,
+      'experience' => $form_state['values']['experience'],
+      'reason' => $form_state['values']['reason'],
+      'comments' => $form_state['values']['comments'],
+    ))->execute();
+    drupal_set_message("successfully saved"); 
 }
 
  /**
  *Magnific Popup core JS file
  */
+
 //drupal_add_js(drupal_get_path('module', 'review') . '/review.js');
 
 /**
- * Submit handler for News configuration.
+ * Submit handler for review configuration.
  *
  *
  * @ingroup form.

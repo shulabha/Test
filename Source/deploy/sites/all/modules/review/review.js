@@ -1,7 +1,7 @@
 //Popup with form
-jQuery(document).ready(function() {
-	jQuery('.test-popup').magnificPopup({
-		type: 'block',
+  $(document).ready(function() {
+	$('.block block-review contextual-links-region').magnificPopup({
+		type: 'inline',
 		preloader: false,
 		focus: '#name',
 

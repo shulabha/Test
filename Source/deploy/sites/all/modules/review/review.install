@@ -29,6 +29,12 @@
         'length' => 32,
         'not null' => TRUE,
         'default' => ''),
+      'reason' => array(
+        'description' => 'Reason of bad experience',
+        'type' => 'varchar',
+        'length' => 16,
+        'not null' => TRUE,
+        'default' => ''),
       'comment' => array(
         'description' => 'Any comment regarding the site',
         'type' => 'varchar',
