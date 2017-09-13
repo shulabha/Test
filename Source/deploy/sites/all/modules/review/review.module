@@ -123,44 +123,35 @@ function review_form($form, &$form_state) {
 function review_form_submit($form, $form_state) {
    
    //$checked = array_filter($form_state['values']['reason']);
-  $value = $form_state['values']['Performance'];
-  //$response = $value->Performance = 'Performance' ;
-  //$response = $value;
-  print_r($value);
-  exit;
-   // if ($form_state['value']['reason'] == 'Content') {
-   //   $con = 1;
-   // }
-   // elseif ($form_state['value']['reason'] == 'Performance') {
-   //   $per = 1;
-   // }
-   // elseif($form_state['value']['reason'] == 'UI') {
-   //   $ui = 1;
-   // }
-   
-   
+  $value = $form_state['values']['reason'];
+  if (in_array("Content", $value, TRUE)) {
+    $content_value = 1;
+  }
+
+  elseif(in_array("Performance", $value,TRUE)) {
+    $performance_value = 1;
+  }
+  elseif(in_array("UI", $value,TRUE)) {
+    $ui_value = 1;
+  }
   //$rea = implode(",", $form_state['values']['reason']);
   //echo $rea;
   //print_r($form_state['values']['experience']);
   // exit;
-//   global $user; 
-//   // Here u can insert Your custom form values into your custom table.
-// //foreach ($checked as $value) {
-// $insert_node = db_insert('hcp_review')
-//      ->fields(array(
-//       'uid' => $user->uid,
-//       'experience' => $form_state['values']['experience'],
-//       'content' => $con,
-//       'performance' =>$per,
-//       'ui' =>$ui,
-//       'comment' => $form_state['values']['comments'],
-//       ))->execute();
-//      drupal_set_message("successfully saved"); 
-//}
+  global $user; 
+  // Here u can insert Your custom form values into your custom table.
+//foreach ($checked as $value) {
+$insert_node = db_insert('hcp_review')
+     ->fields(array(
+      'uid' => $user->uid,
+      'experience' => $form_state['values']['experience'],
+      'content' => $content_value,
+      'performance' =>$performance_value,
+      'ui' =>$ui_value,
+      'comment' => $form_state['values']['comments'],
+      ))->execute();
+     drupal_set_message("successfully saved"); 
 }
-
-
-
 
  /**
  *Magnific Popup core JS file
