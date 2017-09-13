@@ -14,11 +14,10 @@
     'fields' => array(
       'id' => array(
         'description' => 'The primary identifier for a node.',
-        'type' => 'int',
-        'unsigned' => TRUE,
+        'type' => 'serial',
         'not null' => TRUE),
       'uid' => array(
-        'description' => 'Unique id',
+        'description' => 'User id',
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => TRUE,
@@ -29,12 +28,24 @@
         'length' => 32,
         'not null' => TRUE,
         'default' => ''),
-      'reason' => array(
-        'description' => 'Reason of bad experience',
+      'content' => array(
+        'description' => 'Content was not good',
         'type' => 'varchar',
-        'length' => 16,
         'not null' => TRUE,
-        'default' => ''),
+        'length' => 5,
+        'default' => 0),
+      'performance' => array(
+        'description' => 'performance was not good',
+        'type' => 'varchar',
+        'not null' => TRUE,
+        'length' => 5,
+        'default' => 0),
+      'ui' => array(
+        'description' => 'ui was not good',
+        'type' => 'varchar',
+        'not null' => TRUE,
+        'length' => 5,
+        'default' => 0),
       'comment' => array(
         'description' => 'Any comment regarding the site',
         'type' => 'varchar',
@@ -42,8 +53,10 @@
         'not null' => TRUE,
         'default' => ''),
       ),
-    'primary key' => array('uid'),
+    'primary key' => array('id'),
+    //<strong> 'auto increment' => 2,</strong>
     );
+
 	return $schema;
  }
 ?>

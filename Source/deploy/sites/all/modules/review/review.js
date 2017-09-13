@@ -1,6 +1,6 @@
 //Popup with form
   $(document).ready(function() {
-	$('.block block-review contextual-links-region').magnificPopup({
+	$('#block-review-review-select-form').magnificPopup({
 		type: 'inline',
 		preloader: false,
 		focus: '#name',

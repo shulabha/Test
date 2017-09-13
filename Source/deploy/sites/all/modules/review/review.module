@@ -62,6 +62,18 @@ function review_block_view($delta = '') {
  * Custom form.
  */
 function review_form($form, &$form_state) {
+   
+
+//   <div id="test-popup" class="white-popup mfp-hide">
+//   print_r('Hello');
+// </div>
+
+//   drupal_add_js(drupal_get_path('module', 'review') . '/review.js');
+//   drupal_add_js(drupal_get_path('module', 'review') . 'js/jquery.magnific-popup.js');
+//   drupal_add_js(drupal_get_path('module', 'review') . 'js/jquery.magnific-popup.min.js');
+//   drupal_add_css(drupal_get_path('module', 'review') . 'css/magnific-popup.js');
+
+  
   $form['experience'] = array(
     '#type' => 'radios',
     '#title' => t('Share your experience'),
@@ -104,50 +116,51 @@ function review_form($form, &$form_state) {
   return $form;
 }
 
-/**
- * Custom form submit function.
- */
-/*function review_form_submit($form, &$form_state) {
-
- echo "<strong>User experience:</strong> ". $form_state[values][experience].'<br><br>';
- 
- if($form_state[values][experience] == 'Bad'){
- echo "<strong>REASON:</strong> ";
- foreach($form_state[values][reason] as $k=>$v){
- if ($v != '0'){
-  echo $v.'<br>';
- }
-} 
-}
-
- echo "<strong>Comment submitted by User:</strong> ". $form_state[values][comments].'<br>';
- 
-echo '<br><br><br>';
-  echo '<pre>';
-  print_r($form_state);
-  echo '</pre>';
-  die;
-   
-  
-  
-}*/
 
 /**
  * Implements security_settings_form_submit().
  */
 function review_form_submit($form, $form_state) {
-  global $user; 
-  // Here u can insert Your custom form values into your custom table.
-  db_insert('hcp_review')
-    ->fields(array(
-      'id' => 1,
-      'uid' => $user->uid,
-      'experience' => $form_state['values']['experience'],
-      'reason' => $form_state['values']['reason'],
-      'comments' => $form_state['values']['comments'],
-    ))->execute();
-    drupal_set_message("successfully saved"); 
+   
+   //$checked = array_filter($form_state['values']['reason']);
+  $value = $form_state['values']['Performance'];
+  //$response = $value->Performance = 'Performance' ;
+  //$response = $value;
+  print_r($value);
+  exit;
+   // if ($form_state['value']['reason'] == 'Content') {
+   //   $con = 1;
+   // }
+   // elseif ($form_state['value']['reason'] == 'Performance') {
+   //   $per = 1;
+   // }
+   // elseif($form_state['value']['reason'] == 'UI') {
+   //   $ui = 1;
+   // }
+   
+   
+  //$rea = implode(",", $form_state['values']['reason']);
+  //echo $rea;
+  //print_r($form_state['values']['experience']);
+  // exit;
+//   global $user; 
+//   // Here u can insert Your custom form values into your custom table.
+// //foreach ($checked as $value) {
+// $insert_node = db_insert('hcp_review')
+//      ->fields(array(
+//       'uid' => $user->uid,
+//       'experience' => $form_state['values']['experience'],
+//       'content' => $con,
+//       'performance' =>$per,
+//       'ui' =>$ui,
+//       'comment' => $form_state['values']['comments'],
+//       ))->execute();
+//      drupal_set_message("successfully saved"); 
+//}
 }
+
+
+
 
  /**
  *Magnific Popup core JS file
