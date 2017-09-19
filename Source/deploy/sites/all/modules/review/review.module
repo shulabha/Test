@@ -1,4 +1,6 @@
 <?php
+
+
 /**
  * Implements hook_menu().
  */
@@ -47,18 +49,29 @@ function review_block_info() {
 function review_block_view($delta = '') {
   // This example is adapted from node.module.
   $block = array();
+
   drupal_add_js(drupal_get_path('module', 'review') . '/js/jquery.magnific-popup.js', array('group' => JS_THEME, 'every_page' => TRUE));
+  drupal_add_js(drupal_get_path('module', 'review') . '/js/review.js', array('group' => JS_THEME, 'every_page' => TRUE));
+  // drupal_add_js(drupal_get_path('module', 'review') . '/js/jquery.magnific-popup.min.js', array('group' => JS_THEME, 'every_page' => TRUE));
   drupal_add_css(drupal_get_path('module', 'review') . '/css/magnific-popup.css', array('group' => CSS_THEME, 'every_page' => TRUE));
+
+  l(t('review'), 'Click here', array('attributes' => array('id' => 'block-review-review-select-form')));
+
+
   switch ($delta) {
     case 'review_select_form':
       $block['subject'] = t('Review');
-      $block['content'] = '<div id="block-review-review-select-form" class="white-popup mfp-hide">
-  hello world</div>';
-      //drupal_get_form('review_form');
+      $block['content'] = drupal_get_form('review_form');
     break;
   }
   return $block;
 }
+
+// review_init(){
+// drupal_add_js(drupal_get_path('module', 'review') . '/js/review.js');
+// drupal_add_js(drupal_get_path('module', 'review') . '/js/jquery.magnific-popup.js');
+// drupal_add_css(drupal_get_path('module', 'review') . '/css/magnific-popup.css');
+// }
 
 /**
  * Custom form.
@@ -122,9 +135,9 @@ function review_form_submit($form, $form_state) {
 
   // }
   
-  // if (in_array("Content", $value,TRUE)) {
-  //   $content_value = 1;
-  // }
+  if (in_array("Content", $value,TRUE)) {
+    $content_value = 1;
+  }
 
   if(in_array("Performance", $value,TRUE)) {
     $performance_value = 1;
