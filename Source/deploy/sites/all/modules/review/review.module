@@ -24,6 +24,21 @@ function review_menu() {
     'access arguments' => array('administer hcp review configuration'),
     'file' => 'review_admin.inc',
   );
+
+  $items['node/1'] = array(
+      'title' => 'The link',
+      'page callback' => 'review_block_link',
+      'type' => MENU_NORMAL_ITEM,
+      'file' => 'review_admin.inc',
+  );
+
+  $items['ajax/%ctools_js/%'] = array(
+      'title' => 'The Happy Modal',
+      'page arguments' => array(1),
+      'page callback' => 'review_block_view',
+      'type' => MENU_NORMAL_ITEM,
+      //'file' => 'review_admin.inc',
+  );
   
   return $items;
 }
@@ -47,15 +62,14 @@ function review_block_info() {
  * Implements hook_block_view().
  */
 function review_block_view($delta = '') {
+  ctools_include('ajax');
+  ctools_include('modal');
   // This example is adapted from node.module.
   $block = array();
 
-  drupal_add_js(drupal_get_path('module', 'review') . '/js/jquery.magnific-popup.js', array('group' => JS_THEME, 'every_page' => TRUE));
-  drupal_add_js(drupal_get_path('module', 'review') . '/js/review.js', array('group' => JS_THEME, 'every_page' => TRUE));
-  // drupal_add_js(drupal_get_path('module', 'review') . '/js/jquery.magnific-popup.min.js', array('group' => JS_THEME, 'every_page' => TRUE));
-  drupal_add_css(drupal_get_path('module', 'review') . '/css/magnific-popup.css', array('group' => CSS_THEME, 'every_page' => TRUE));
+  $title = t('My site review');
 
-  l(t('review'), 'Click here', array('attributes' => array('id' => 'block-review-review-select-form')));
+
 
 
   switch ($delta) {
@@ -64,14 +78,11 @@ function review_block_view($delta = '') {
       $block['content'] = drupal_get_form('review_form');
     break;
   }
+
+  $output = render($block);
+  ctools_modal_render($title, $output)
   return $block;
 }
-
-// review_init(){
-// drupal_add_js(drupal_get_path('module', 'review') . '/js/review.js');
-// drupal_add_js(drupal_get_path('module', 'review') . '/js/jquery.magnific-popup.js');
-// drupal_add_css(drupal_get_path('module', 'review') . '/css/magnific-popup.css');
-// }
 
 /**
  * Custom form.
@@ -118,6 +129,8 @@ function review_form($form, &$form_state) {
 
   return $form;
 }
+
+
 
 
 /**
