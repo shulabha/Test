@@ -32,3 +32,26 @@ function review_configuration_form($form, &$form_state) {
 
   return $form;
 }
+
+function review_block_link_callback() {
+  ctools_include('ajax');
+  ctools_include('modal');
+
+  $build['paragraph'] = array(
+    '#prefix' => '<p>',
+    '#suffix' => '</p>',
+    '#markup' => t('This is a popup'),
+  );
+
+    $text = t('Click here');
+    $dest = '';
+    $alt = t('Please Click here');
+
+    $link = ctools_modal_text_button($text, $dest, $alt);
+
+    $build['popup_link'] = array(
+      '#markup' => $link,
+    );
+
+    return render($build);
+}

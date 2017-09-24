@@ -27,8 +27,8 @@ function review_menu() {
 
   $items['node/1'] = array(
       'title' => 'The link',
-      'page callback' => 'review_block_link',
-      'type' => MENU_NORMAL_ITEM,
+      'page callback' => 'review_page',
+      'type' => MENU_CALLBACK,
       'file' => 'review_admin.inc',
   );
 
@@ -36,7 +36,7 @@ function review_menu() {
       'title' => 'The Happy Modal',
       'page arguments' => array(1),
       'page callback' => 'review_block_view',
-      'type' => MENU_NORMAL_ITEM,
+      'type' => MENU_CALLBACK,
       //'file' => 'review_admin.inc',
   );
   
@@ -44,6 +44,27 @@ function review_menu() {
 }
 
 
+/**
+* Helper function to make a link.
+*/
+function review_make_link($link_text = '') {
+// Set a default value if no text in supplied.
+if (empty($link_text)) {
+$link_text = 'Click for Popup';
+}
+
+return '<div id = "">'. l($link_text, 'review/nojs', array('attributes' => array('class' => 'ctools-use-modal')));
+}
+
+/**
+* An example page.
+*/
+function review_page() {
+// Load the modal library and add the modal javascript.
+ctools_include('modal');
+ctools_modal_add_js();
+return _mymodule_make_link('Magical modal');
+}
 
 /**
  * Implements hook_block_info().
@@ -61,27 +82,54 @@ function review_block_info() {
 /**
  * Implements hook_block_view().
  */
-function review_block_view($delta = '') {
-  ctools_include('ajax');
-  ctools_include('modal');
+function review_block_view($ajax) {
+  //ctools_include('ajax');
+  //ctools_include('modal');
   // This example is adapted from node.module.
-  $block = array();
 
-  $title = t('My site review');
+  if ($ajax) {
+    ctools_include('ajax');
+    ctools_include('modal');
 
+    $form_state = array(
+      'ajax' => TRUE,
+      'title' => t('MyModule Modal Form'),
+    );
 
+    // Use ctools to generate ajax instructions for the browser to create
+    // a form in a modal popup.
+    $output = ctools_modal_form_wrapper('review_form', $form_state);
 
+    // If the form has been submitted, there may be additional instructions
+    // such as dismissing the modal popup.
+    if (!empty($form_state['ajax_commands'])) {
+      $output = $form_state['ajax_commands'];
+    }
 
-  switch ($delta) {
-    case 'review_select_form':
-      $block['subject'] = t('Review');
-      $block['content'] = drupal_get_form('review_form');
-    break;
+    // Return the ajax instructions to the browser via ajax_render().
+    print ajax_render($output);
+    drupal_exit();
   }
+  else {
+    return drupal_get_form('review_form');
+  }
+  // $block = array();
 
-  $output = render($block);
-  ctools_modal_render($title, $output)
-  return $block;
+  // $title = t('My site review');
+
+
+
+
+  // switch ($delta) {
+  //   case 'review_select_form':
+  //     $block['subject'] = t('Review');
+  //     $block['content'] = drupal_get_form('review_form');
+  //   break;
+  // }
+
+  // //$output = render($block);
+  // //ctools_modal_render($title, $output)
+  // return $block;
 }
 
 /**
